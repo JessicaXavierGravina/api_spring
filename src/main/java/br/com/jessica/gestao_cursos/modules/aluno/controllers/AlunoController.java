@@ -75,7 +75,6 @@ public class AlunoController {
         @ApiResponse(responseCode = "400", description = "User not found")
     })
     @SecurityRequirement(name = "jwt_auth")
-
     public ResponseEntity<Object> get(HttpServletRequest request) {
         var idAluno = request.getAttribute("aluno_id");
     
@@ -106,6 +105,4 @@ public class AlunoController {
     public List<CursoEntity> findJobByFilter(@RequestParam String filter) {
         return this.ListAllCursosByFilterUseCase.execute(filter);
     }
-    
-    
 }
