@@ -102,6 +102,7 @@ public class AlunoController {
             @Content(array = @ArraySchema(schema = @Schema(implementation = CursoEntity.class)))
         })
     })
+    @SecurityRequirement(name = "jwt_auth")
     public List<CursoEntity> findJobByFilter(@RequestParam String filter) {
         return this.ListAllCursosByFilterUseCase.execute(filter);
     }
