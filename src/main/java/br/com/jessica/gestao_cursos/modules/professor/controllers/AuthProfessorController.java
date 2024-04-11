@@ -28,5 +28,4 @@ public class AuthProfessorController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
-    
 }
