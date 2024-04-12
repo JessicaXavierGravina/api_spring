@@ -16,7 +16,7 @@ import br.com.jessica.gestao_cursos.modules.professor.repositories.CursoReposito
 public class ApplyCursoAlunoUseCase {
 
     @Autowired
-    private AlunoRepository alunoRepository;
+    private AlunoRepository alunoRepository;    
 
     @Autowired
     private CursoRepository cursoRepository;
