@@ -19,7 +19,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "apply_jobs")
+@Entity(name = "apply_cursos")
 @Data
 @Builder
 @AllArgsConstructor
