@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.jessica.gestao_cursos.modules.aluno.AlunoEntity;
 import br.com.jessica.gestao_cursos.modules.aluno.dto.ProfileAlunoResponseDTO;
+import br.com.jessica.gestao_cursos.modules.aluno.useCases.ApplyCursoAlunoUseCase;
 import br.com.jessica.gestao_cursos.modules.aluno.useCases.CreateAlunoUseCase;
 import br.com.jessica.gestao_cursos.modules.aluno.useCases.ListAllCursosByFilterUseCase;
 import br.com.jessica.gestao_cursos.modules.aluno.useCases.ProfileAlunoUseCase;
@@ -43,6 +44,9 @@ public class AlunoController {
     private ProfileAlunoUseCase profileAlunoUseCase;
 
     @Autowired
+    private ApplyCursoAlunoUseCase applyCursoAlunoUseCase;
+
+    @Autowired
     private ListAllCursosByFilterUseCase ListAllCursosByFilterUseCase;
 
     @PostMapping("/")
@@ -53,17 +57,14 @@ public class AlunoController {
         }),
         @ApiResponse(responseCode = "400", description = "Usuário já existe")
     })
-
     public ResponseEntity<Object> create(@Valid @RequestBody AlunoEntity alunoEntity) {
         try{
-            var result = this.createAlunoUseCase.execute(alunoEntity);
+            var result = createAlunoUseCase.execute(alunoEntity);
             return ResponseEntity.ok().body(result);
         }catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
-  
 
     @GetMapping("/")
     @PreAuthorize("hasRole('ALUNO')")
@@ -79,18 +80,13 @@ public class AlunoController {
         var idAluno = request.getAttribute("aluno_id");
     
         try {
-            // Verificar se idAluno não é nulo antes de tentar convertê-lo para uma string
-            if (idAluno != null) {
-                var profile = this.profileAlunoUseCase.execute(UUID.fromString(idAluno.toString()));
-                return ResponseEntity.ok().body(profile);
-            } else {
-                // Se idAluno for nulo, retornar uma resposta adequada (por exemplo, 404 Not Found)
-                return ResponseEntity.notFound().build();
-            }
-        } catch(Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            var profile = this.profileAlunoUseCase
+          .execute(UUID.fromString(idAluno.toString()));
+      return ResponseEntity.ok().body(profile);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
+  }
 
     @GetMapping("/curso")
     @PreAuthorize("hasRole('ALUNO')")
@@ -105,4 +101,20 @@ public class AlunoController {
     public List<CursoEntity> findJobByFilter(@RequestParam String filter) {
         return this.ListAllCursosByFilterUseCase.execute(filter);
     }
-}
+
+    @PostMapping("/curso/apply")
+    @PreAuthorize("hasRole('ALUNO')")
+    @Operation(summary = "Inscrição do aluno para o curso", description = "Essa função é responsável por realizar a inscrição do alunos em um curso.")
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<Object> applyCurso(HttpServletRequest request, @RequestBody UUID idCurso){
+  
+      var idAluno = request.getAttribute("aluno_id");
+  
+      try{
+            var result = this.applyCursoAlunoUseCase.execute(UUID.fromString(idAluno.toString()), idCurso);
+            return ResponseEntity.ok().body(result);
+      }catch(Exception e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+      }
+    }
+  }
