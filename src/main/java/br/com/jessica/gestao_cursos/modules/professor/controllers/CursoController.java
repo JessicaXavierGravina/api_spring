@@ -79,5 +79,4 @@ public class CursoController {
             var result = this.listAllCursosByProfessorUseCase.execute(UUID.fromString(professorId.toString()));
             return ResponseEntity.ok().body(result);
         }
-    
     }

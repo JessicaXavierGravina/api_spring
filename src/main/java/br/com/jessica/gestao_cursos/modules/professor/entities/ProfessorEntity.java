@@ -11,19 +11,25 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "professor")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProfessorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String name;
-
+    @NotBlank
     @Pattern(regexp = "\\S+", message = "O campo não deve conter espaço")
     private String username;
 
@@ -35,8 +41,8 @@ public class ProfessorEntity {
     
     private String website;
     private String description;
+    private String name;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
-
 }
