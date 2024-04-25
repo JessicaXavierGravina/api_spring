@@ -46,7 +46,6 @@ public class TestCreateCursoController {
     @Test
     public void deve_ser_capaz_criar_um_novo_curso() throws Exception{
 
-
         var professor = ProfessorEntity.builder()
             .description("PROFESSOR_DESCRIPTION")
             .email("email@professor.com")
@@ -64,16 +63,16 @@ public class TestCreateCursoController {
 
         var result = mvc.perform(MockMvcRequestBuilders.post("/professor/curso")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(objectToJson(createdCursoDTO)))
-        .header("Authorization", TestUtils.generateToken(professor.getId(), "J4V4curs0s"))
-        )
+        .content(TestUtils.objectToJson(createdCursoDTO)))
+        .header("Authorization", 
+        TestUtils.generateToken(professor.getId(), "J4V4curs0s")))
         .andExpect(MockMvcResultMatchers.status().isOk());
 
         System.out.println(result);
     }
 
     @Test
-    public void should_not_be_able_to_create_a_new_job_if_company_not_found() throws Exception{
+    public void não_deve_ser_capaz_de_criar_um_novo_curso_professor_nao_existir() throws Exception{
         var createdCursoDTO = CreateCursoDTO.builder()
         .skill_necessaria("SKILL_NECESSARIA_TEST")
         .description("DESCRIPTION_TEST")
